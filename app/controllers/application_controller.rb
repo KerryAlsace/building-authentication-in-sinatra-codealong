@@ -13,8 +13,14 @@ class ApplicationController < Sinatra::Base
       !!session[:email] # Double negation converts from actual value to truthy value of object
     end
 
-    def login(email)
-      session[:email] = email
+    def login(email, password)
+      # Check if a user with this email actually exists
+      user = User.find_by(:email => email)
+      if user && user.authenticate(password)
+          session[:email] = user.email
+      else
+        redirect '/login'
+      end
     end
 
     def logout!
