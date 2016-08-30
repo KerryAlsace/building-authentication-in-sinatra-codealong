@@ -58,3 +58,38 @@ O. exit, then restart rake console:
     => #<User:0x007ff9329abce8 id: 2, email: "hello@example.com", password_digest: "$2a$10$19RSQjgq9iu75e4F.gCSQefWojqBPHexv45VndYPz3lq7PZYJQkXC">
   u.authenticate("notyopassword")
     => false
+
+
+1. Build my user registration process (signup form and signup creation)
+2. Give posts to users
+3. Only let them edit posts they make
+  * See 1.c
+
+1.c
+A. rake db:create_migration NAME=create_posts
+  class CreatePosts < ActiveRecord::Migration
+    def change
+      create_table :posts do |t|
+        t.string :title
+        t.text :content
+        t.integer :user_id #foreign key
+      end
+    end
+  end
+B. Make Post model
+  class Post < ActiveRecord::Base
+    belongs_to :user
+  end
+C. Add to User model
+  has_many :posts
+D. rake db:migrate
+E. rake console
+F.  u = User.last
+    u.posts.to_sql
+      => "SELECT \"posts\".* FROM \"posts\" WHERE \"posts\".\"user_id\" = 3"
+G. u.posts.build(title: "Kerry's Post Title")
+      => #<Post:0x007fe2ea3910c8 id: nil, title: "Kerry's Post Title", content: nil, user_id: 3>
+H. p = _
+   u.save
+   p
+      => #<Post:0x007fe2ea3910c8 id: 1, title: "Kerry's Post Title", content: nil, user_id: 3>
