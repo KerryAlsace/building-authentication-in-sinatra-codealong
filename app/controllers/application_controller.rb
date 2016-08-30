@@ -10,7 +10,7 @@ class ApplicationController < Sinatra::Base
   helpers do
 
     def logged_in?
-      !!session[:email] # Double negation converts from actual value to truthy value of object
+      !!current_user # Double negation converts from actual value to truthy value of object
     end
 
     def login(email, password)
@@ -21,6 +21,10 @@ class ApplicationController < Sinatra::Base
       else
         redirect '/login'
       end
+    end
+
+    def current_user
+      @current_user ||= User.find_by(:email => session[:email]) if session[:email]
     end
 
     def logout!

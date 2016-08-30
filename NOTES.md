@@ -93,3 +93,22 @@ H. p = _
    u.save
    p
       => #<Post:0x007fe2ea3910c8 id: 1, title: "Kerry's Post Title", content: nil, user_id: 3>
+
+
+
+
+1. Validations:
+2. Add line to app/models/user.rb
+  validates :email, :presence => true
+3. rake console
+  u = User.new
+    => #<User:0x007fc789c42e00 id: nil, email: nil, password_digest: nil>
+  u.save
+    => false
+  u.errors
+    => #<ActiveModel::Errors:0x007fc789bd8550
+    @base=#<User:0x007fc789c42e00 id: nil, email: nil, password_digest: nil>,
+    @details={:email=>[{:error=>:blank}], :password=>[{:error=>:blank}]},
+    @messages={:email=>["can't be blank"], :password=>["can't be blank"]}>
+  u.errors.full_messages
+    => ["Email can't be blank", "Password can't be blank"]
